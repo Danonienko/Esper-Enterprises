@@ -35,7 +35,15 @@ export default class Stamina extends CharacterComponentBase<Character> {
 	public constructor(character: Character) {
 		super(character);
 
-		this.Janitor.Add(this.MaxStamina.StatChanged.Connect(() => this.SetStamina(this._currentStamina)));
+		this.Janitor.Add(
+			this.MaxStamina.StatChanged.Connect((_, newMax) => {
+				if (this._currentStamina <= newMax) return;
+
+				// Clamping to the new max is not an Invigorated event, so mark the state as already invigorated
+				this._isInvigorated = true;
+				this.SetStamina(newMax);
+			}),
+		);
 
 		this.Janitor.Add(createRoot(Make("Folder", {})), "unmount").render(
 			createPortal(
