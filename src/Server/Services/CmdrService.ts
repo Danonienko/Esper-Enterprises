@@ -1,0 +1,5 @@
+import { Cmdr } from "@rbxts/cmdr";
+
+Cmdr.RegisterDefaultCommands();
+
+export = {};
