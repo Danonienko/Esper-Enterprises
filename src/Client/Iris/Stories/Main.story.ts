@@ -5,6 +5,7 @@ import MainIris from "../Main.iris";
 export = CreateIrisStory(
 	{
 		iris: Iris,
+		name: "Main",
 	},
 	() => Iris.Connect(() => MainIris()),
 );
