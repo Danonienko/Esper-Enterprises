@@ -60,6 +60,7 @@ Change a stat with `AddModifier(id, modifier)` and `RemoveModifier(id)` on the `
 - `src/Shared/` contains client-only and server-only scripts: `ModuleLoader/ActorForClient/LocalScript.client.lua`, `ModuleLoader/PersistentLoadedCheck.client.lua`, and `ModuleLoader/ActorForServer/Script.client.lua`. These are an exception to the realm rule above. Do not add more realm-specific code to `Shared/`.
 - `tsconfig.json` sets `noLib: true` and takes its types from `@rbxts/types` (via `typeRoots`), so Roblox globals such as `game`, `Enum`, and `task` are typed without imports.
 - `out/` and `include/` are gitignored generated output. Never edit them by hand; change `src/` and rebuild.
+- The Studio output warning `ContentId: rbxassetid://203785492 failed due to: Asset type does not match requested type` comes from the Rojo plugin, not from project code. Ignore it; don't search the repo or Studio for that asset ID.
 
 ## Working rules
 
