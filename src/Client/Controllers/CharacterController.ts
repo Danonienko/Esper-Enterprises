@@ -9,7 +9,7 @@ class CharacterController {
 	private _character?: Character;
 
 	public constructor() {
-		Players.LocalPlayer.CharacterAppearanceLoaded.Connect((character) => this._handleCharacterAdded(character));
+		Players.LocalPlayer.CharacterAdded.Connect((character) => this._handleCharacterAdded(character));
 		Players.LocalPlayer.CharacterRemoving.Connect(() => this._handleCharacterRemoving());
 	}
 
