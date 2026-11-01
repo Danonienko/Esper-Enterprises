@@ -22,17 +22,36 @@ export type StatModifier = {
 export default class Stat {
 	/** Fires with the old and new value when a change alters `GetValue`. */
 	public readonly StatChanged: Signal<(oldValue: number, newValue: number) => void> = new Signal();
+	/** Fires with the old and new base when `SetBase` changes it. Fires before `StatChanged` for the same change. */
+	public readonly BaseChanged: Signal<(oldBase: number, newBase: number) => void> = new Signal();
 	/** Fires when `AddModifier` is called, including when it replaces an existing modifier with the same id. */
 	public readonly ModifierAdded: Signal<(id: string, modifier: StatModifier) => void> = new Signal();
 	/** Fires when `RemoveModifier` removes a modifier. Does not fire if the id was not present. */
 	public readonly ModifierRemoved: Signal<(id: string) => void> = new Signal();
 
-	private readonly _base: number;
+	private _base: number;
 	private readonly _modifiers: Map<string, StatModifier> = new Map();
 
 	/** Creates a stat whose value before any modifiers is `base`. */
 	public constructor(base: number) {
 		this._base = base;
+	}
+
+	/** Returns the base value, without modifiers applied. */
+	public GetBase(): number {
+		return this._base;
+	}
+
+	/** Changes the base value. Modifiers still apply on top of it. */
+	public SetBase(base: number): void {
+		if (base === this._base) return;
+
+		const oldValue = this.GetValue();
+		const oldBase = this._base;
+
+		this._base = base;
+		this.BaseChanged.Fire(oldBase, base);
+		this._fireIfChanged(oldValue);
 	}
 
 	/** Adds or replaces the modifier stored under `id`. */
