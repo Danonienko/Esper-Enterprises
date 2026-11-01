@@ -4,9 +4,10 @@ import Log from "@rbxts/log";
 import Signal from "@rbxts/signal";
 import type Character from "..";
 import { createElement } from "@rbxts/react";
-import { createRoot } from "@rbxts/react-roblox";
+import { createPortal, createRoot } from "@rbxts/react-roblox";
 import { Players } from "@rbxts/services";
 import StaminaBar from "Client/React/Components/StaminaBar";
+import Make from "@rbxts/make";
 
 export default class Stamina extends StatComponentBase<Character> {
 	public readonly Invigorated: Signal = this.Janitor.Add(new Signal());
@@ -35,8 +36,15 @@ export default class Stamina extends StatComponentBase<Character> {
 		super(character, 100);
 		this.Refresh();
 
-		this.Janitor.Add(createRoot(Players.LocalPlayer.PlayerGui), "unmount").render(
-			createElement("screengui", { ResetOnSpawn: false }, createElement(StaminaBar, { Stamina: this })),
+		this.Janitor.Add(createRoot(Make("Folder", {})), "unmount").render(
+			createPortal(
+				createElement(
+					"screengui",
+					{ ResetOnSpawn: false, key: "StaminaBar" },
+					createElement(StaminaBar, { Stamina: this }),
+				),
+				Players.LocalPlayer.PlayerGui,
+			),
 		);
 	}
 
