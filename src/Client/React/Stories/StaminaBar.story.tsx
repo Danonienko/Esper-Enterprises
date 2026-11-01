@@ -6,18 +6,7 @@ import StaminaBar from "../Components/StaminaBar";
 import Signal from "@rbxts/signal";
 
 const StaminaChanged = new Signal<(oldStamina: number, newStamina: number) => void>();
-const MaxStaminaChanged = new Signal<(oldMaxStamina: number, newMaxStamina: number) => void>();
-
-let currentStamina = 50;
-let maxStamina = 100;
-
-const mockStamina = {
-	StaminaChanged,
-	MaxStaminaChanged,
-
-	GetCurrentStamina: () => currentStamina,
-	GetMaxStamina: () => maxStamina,
-} as unknown as Stamina;
+const StatChanged = new Signal<(oldValue: number, newValue: number) => void>();
 
 export = CreateReactStory(
 	{
@@ -30,17 +19,29 @@ export = CreateReactStory(
 	},
 	(props) => {
 		useEffect(() => {
-			const oldStamina = currentStamina;
-			currentStamina = props.controls.CurrentStamina;
-			StaminaChanged.Fire(oldStamina, currentStamina);
+			const oldStamina = props.controls.CurrentStamina;
+			StaminaChanged.Fire(oldStamina, props.controls.CurrentStamina);
 		}, [props.controls.CurrentStamina]);
 
 		useEffect(() => {
-			const oldMaxStamina = maxStamina;
-			maxStamina = props.controls.MaxStamina;
-			MaxStaminaChanged.Fire(oldMaxStamina, maxStamina);
+			const oldMaxStamina = props.controls.MaxStamina;
+			StatChanged.Fire(oldMaxStamina, props.controls.MaxStamina);
 		}, [props.controls.MaxStamina]);
 
-		return <StaminaBar Stamina={mockStamina} />;
+		return (
+			<StaminaBar
+				Stamina={
+					{
+						StaminaChanged,
+						MaxStamina: {
+							StatChanged,
+							GetValue: () => props.controls.MaxStamina,
+						},
+
+						GetCurrentStamina: () => props.controls.CurrentStamina,
+					} as unknown as Stamina
+				}
+			/>
+		);
 	},
 );

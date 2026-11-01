@@ -57,7 +57,10 @@ export default class StaminaRegenerator extends CharacterComponentBase<Character
 	}
 
 	public CanRegenerate(): boolean {
-		return this._stamina.GetCurrentStamina() < this._stamina.GetMaxStamina() && this.Character.Humanoid.Health > 0;
+		return (
+			this._stamina.GetCurrentStamina() < this._stamina.MaxStamina.GetValue() &&
+			this.Character.Humanoid.Health > 0
+		);
 	}
 
 	private _delay(): void {

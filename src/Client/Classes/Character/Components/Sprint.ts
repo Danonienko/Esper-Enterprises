@@ -2,7 +2,6 @@ import Signal from "@rbxts/signal";
 import { RunService } from "@rbxts/services";
 import CharacterComponentBase from "Shared/Classes/CharacterComponentBase";
 import type Stamina from "./Stamina";
-import type MovementSpeed from "./MovementSpeed";
 import type Character from "..";
 import Stat from "Shared/Classes/Stat";
 
@@ -17,7 +16,7 @@ export default class Sprint extends CharacterComponentBase<Character> {
 	public readonly StaminaUseSpeed: Stat = new Stat(0.1);
 
 	private readonly _stamina: Stamina = this.Character.GetComponent("Stamina");
-	private readonly _movementSpeed: MovementSpeed = this.Character.GetComponent("MovementSpeed");
+	private readonly _movementSpeed: Stat = this.Character.GetComponent("MovementSpeed").Value;
 	private readonly _minStaminaToStart: number = 10;
 
 	private _isSprinting: boolean = false;
@@ -37,7 +36,7 @@ export default class Sprint extends CharacterComponentBase<Character> {
 		this._isSprinting = true;
 		this._drainTimer = 0;
 
-		this._movementSpeed.Value.AddModifier("sprint", { add: this.SpeedBoost.GetValue() });
+		this._movementSpeed.AddModifier("sprint", { add: this.SpeedBoost.GetValue() });
 		RunService.BindToRenderStep(RUN_SERVICE_BIND, Enum.RenderPriority.Character.Value, (dt) => this._tick(dt));
 		this.SprintStarted.Fire();
 	}
@@ -47,7 +46,7 @@ export default class Sprint extends CharacterComponentBase<Character> {
 
 		this._isSprinting = false;
 		RunService.UnbindFromRenderStep(RUN_SERVICE_BIND);
-		this._movementSpeed.Value.RemoveModifier("sprint");
+		this._movementSpeed.RemoveModifier("sprint");
 		this.SprintEnded.Fire();
 	}
 
@@ -56,7 +55,7 @@ export default class Sprint extends CharacterComponentBase<Character> {
 	}
 
 	public CanStartSprint(): boolean {
-		const threshold = math.max(this._minStaminaToStart, this._stamina.GetMaxStamina() * 0.2);
+		const threshold = math.max(this._minStaminaToStart, this._stamina.MaxStamina.GetValue() * 0.2);
 		return this._stamina.GetCurrentStamina() >= threshold && this.Character.Humanoid.Health > 0;
 	}
 

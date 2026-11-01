@@ -8,10 +8,10 @@ type Props = {
 
 export default function StaminaBar({ Stamina }: Props) {
 	const [currentStamina, setCurrentStamina] = useState(Stamina.GetCurrentStamina());
-	const [maxStamina, setMaxStamina] = useState(Stamina.GetMaxStamina());
+	const [maxStamina, setMaxStamina] = useState(Stamina.MaxStamina.GetValue());
 
 	useEventListener(Stamina.StaminaChanged, (_, newStamina) => setCurrentStamina(newStamina));
-	useEventListener(Stamina.MaxStaminaChanged, (_, newMaxStamina) => setMaxStamina(newMaxStamina));
+	useEventListener(Stamina.MaxStamina.StatChanged, (_, newMaxStamina) => setMaxStamina(newMaxStamina));
 
 	const currentStaminaSpring = useSpring(maxStamina > 0 ? currentStamina / maxStamina : 0);
 	const transparencySpring = useSpring(currentStamina < maxStamina ? 0 : 1);
