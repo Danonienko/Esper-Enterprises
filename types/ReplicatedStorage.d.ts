@@ -5,5 +5,11 @@ interface ReplicatedStorage {
 				readonly SprintAction: InputAction;
 			};
 		};
+
+		readonly Cmdr: {
+			readonly Commands: Folder;
+			readonly Hooks: Folder;
+			readonly Types: Folder;
+		};
 	};
 }
