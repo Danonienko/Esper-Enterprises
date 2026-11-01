@@ -26,8 +26,10 @@
   },
   "dependencies": {
     "@rbxts/cmdr": "^1.12.1",
+    "@rbxts/iris": "^2.3.1-ts.1",
     "@rbxts/janitor": "^1.18.3-ts.0",
     "@rbxts/log": "^0.6.3",
+    "@rbxts/make": "^1.0.6",
     "@rbxts/net": "^3.0.10",
     "@rbxts/pretty-react-hooks": "^0.6.4",
     "@rbxts/react": "^17.3.7-ts.2",
